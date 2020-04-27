@@ -1,8 +1,8 @@
 "use strict";
 
-let money = prompt("Ваш бюджет на месяц?", '25000');
+let money = +prompt("Ваш бюджет на месяц?", '25000');
 let time = prompt("Введите дату в формате YYYY-MM-DD", '2020-06-24');
-const appData = {
+let appData = {
     moneyData: money,
     timeData: time,
     expenses: {},
@@ -10,9 +10,46 @@ const appData = {
     income : [],
     savings: false,
 };
-let qwest1 = prompt("Введите обязательную статью расходов в этом месяце", 'КУ');
-let qwest2 = prompt("Во сколько обойдется?", '5000');
-appData.expenses[qwest1]= qwest2;
-let aDay = (appData.moneyData - appData.expenses[qwest1])/30;
-alert(`В день  ${ aDay } `)
+
+for (let i = 0; i < 2; i++) {
+    let a = prompt("Введите обязательную статью расходов в этом месяце", ''),
+        b = +prompt("Во сколько обойдется?", '');
+    if ((typeof(a) === 'string') && (typeof(a)!= null) && (typeof(b)!= null) && (a != '') && (b != '') && a.length < 50) {
+        appData.expenses[a]= b;
+    } else {
+        console.log('ups');
+    }
+} 
+/*let a,b, i=0;
+ while (i < 2){
+    a = prompt("Введите обязательную статью расходов в этом месяце", '');
+    b = +prompt("Во сколько обойдется?", '');
+    if ((typeof(a) === 'string') && (typeof(a)!= null) && (typeof(b)!= null) && (a != '') && (b != '') && a.length < 50) {
+        appData.expenses[a]= b;
+    }
+    i++;
+} */
+/* do {
+    a = prompt("Введите обязательную статью расходов в этом месяце", '');
+    b = +prompt("Во сколько обойдется?", '');
+    if ((typeof(a) === 'string') && (typeof(a)!= null) && (typeof(b)!= null) && (a != '') && (b != '') && a.length < 50) {
+        appData.expenses[a]= b;
+    }
+} while (i < 2); */
+
+
+
+appData.moneyPerDay = (appData.moneyData /30);
+let aDay = appData.moneyPerDay;
+alert(`В день  ${ aDay } `);
 console.log(appData);
+if (aDay < 100) {
+    console.log("Минимальный уровень достатка");
+} else if (aDay > 100 && aDay < 2000) {
+    console.log("Средний уровень достатка");
+} else if (aDay > 2000){
+    console.log("Высокий уровень достатка");
+} else {
+    console.log("Произошла ошибка");
+}
+    
