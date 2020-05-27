@@ -108,13 +108,15 @@ window.addEventListener('DOMContentLoaded', () => {
           modalCloseBtn = document.querySelector('[data-close]'),
           modal = document.querySelector('.modal');
 
+        const openModal = () => {
+            modal.classList.add('show');
+            modal.classList.remove('hide');
+            document.body.style.overflow = 'hidden';
+            clearInterval(modalTimerId);
+        };
 
         modalTriggerBtns.forEach((item) => {
-            item.addEventListener('click', () => {
-                modal.classList.add('show');
-                modal.classList.remove('hide');
-                document.body.style.overflow = 'hidden';
-            });
+            item.addEventListener('click', openModal);
         });
         
         const closeModal = () => {
@@ -135,4 +137,17 @@ window.addEventListener('DOMContentLoaded', () => {
                 closeModal();
             }
         });
+
+        const modalTimerId = setTimeout(openModal, 5000);
+
+        // проверяем если доскролили в конец показываем модал и удаляем наблюдение
+        const showModalByScroll = () => {
+            if (window.pageYOffset + document.documentElement.clientHeight >= document.documentElement.scrollHeight){
+                openModal();
+                window.removeEventListener('scroll', showModalByScroll);
+            }
+        };
+
+        //событие на скрол
+        window.addEventListener('scroll', showModalByScroll);
 });
