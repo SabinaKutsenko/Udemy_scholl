@@ -197,23 +197,77 @@ window.addEventListener('DOMContentLoaded', () => {
 			'Меню "Фитнес" - это новый подход к приготовлению блюд: больше свежих овощей и фруктов. Продукт активных и здоровых людей. Это абсолютно новый продукт с оптимальной ценой и высоким качеством!',
 			9,
 			'.menu .container'
-			).render();
+		).render();
 
-			new MenuCard(
-				'img/tabs/elite.jpg',
-				'elite',
-				'Меню “Премиум”',
-				'В меню “Премиум” мы используем не только красивый дизайн упаковки, но и качественное исполнение блюд. Красная рыба, морепродукты, фрукты - ресторанное меню без похода в ресторан!',
-				19,
-				'.menu .container'
-				).render();
+		new MenuCard(
+			'img/tabs/elite.jpg',
+			'elite',
+			'Меню “Премиум”',
+			'В меню “Премиум” мы используем не только красивый дизайн упаковки, но и качественное исполнение блюд. Красная рыба, морепродукты, фрукты - ресторанное меню без похода в ресторан!',
+			19,
+			'.menu .container'
+		).render();
 
-			new MenuCard(
-				'img/tabs/post.jpg',
-				'post',
-				'Меню "Постное"',
-				'Меню “Постное” - это тщательный подбор ингредиентов: полное отсутствие продуктов животного происхождения, молоко из миндаля, овса, кокоса или гречки, правильное количество белков за счет тофу и импортных вегетарианских стейков. ',
-				12,
-				'.menu .container'
-				).render();
+		new MenuCard(
+			'img/tabs/post.jpg',
+			'post',
+			'Меню "Постное"',
+			'Меню “Постное” - это тщательный подбор ингредиентов: полное отсутствие продуктов животного происхождения, молоко из миндаля, овса, кокоса или гречки, правильное количество белков за счет тофу и импортных вегетарианских стейков. ',
+			12,
+			'.menu .container',
+			'menu__item'
+		).render();
+
+		// Forms
+
+		const forms = document.querySelectorAll('form');
+
+		const message = {
+			loading: 'загрузка',
+			success: 'спасибо! скоро мы с вами свяжемся',
+			failure: 'Что-то пощло не так!'
+		};
+
+		console.log(forms);
+
+		forms.forEach(item => {
+			postData(item);
+		});
+
+		function postData(form) {
+			form.addEventListener('submit', (e) => {
+				e.preventDefault();
+
+				const statusMessage = document.createElement('div');
+				statusMessage.classList.add('status');
+				statusMessage.textContent = message.loading;
+				form.append(statusMessage);
+
+				const request = new XMLHttpRequest();
+				request.open('POST', 'server.php'); // создаем настройки для запроса
+				
+				//request.setRequestHeader('Content-type', 'multipart/form-data'); // такой заголовок НЕ НУЖЕН для работы с форм дейтой 
+				request.setRequestHeader('Content-type', 'application/json');
+				const formData = new FormData(form); // форм дейта обрабатывает сама форму
+
+				const object = {};
+				formData.forEach((value, key)=> {
+					object[key] = value;
+				});
+				request.send(JSON.stringify(object));
+
+				request.addEventListener('load', () => {
+					if (request.status === 200) {
+						console.log(request.response);
+						statusMessage.textContent = message.success;
+						form.reset();
+						setTimeout(()=> {
+							statusMessage.remove();
+						}, 2000);
+					} else {
+						statusMessage.textContent = message.failure;
+					}
+				});
+			});
+		}
 });
